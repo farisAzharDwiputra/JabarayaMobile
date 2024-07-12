@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ProjectCheva</string>
+    <!-- Web client ID for Google Sign-In -->
+    <string name="default_web_client_id">AIzaSyA_oauuKO0BTEPMHOZIp3BY9seY0XkzmuA</string>
 </resources>

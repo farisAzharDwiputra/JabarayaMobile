@@ -1,53 +1,47 @@
 package com.example.projectcheva
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.AlignmentLine
-import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import androidx.navigation.NavController
 import androidx.wear.compose.material.OutlinedButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @Composable
-fun RegisScreen(){
-
+fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController: NavController) {
+    val context = LocalContext.current
+    remember { SnackbarHostState() }
     //set default font menjadi urbanist
     val fontFamily = FontFamily(
         Font(R.font.urbanist_black, FontWeight.Black),
@@ -61,10 +55,10 @@ fun RegisScreen(){
         Font(R.font.urbanist_thin, FontWeight.Thin),
     )
 
-    var teksRegisEmail by remember{
+    var teksRegisEmail by remember {
         mutableStateOf("")
     }
-    var teksRegisNomer by remember{
+    var teksRegisNomer by remember {
         mutableStateOf("")
     }
     var teksCretedPassword by remember {
@@ -208,7 +202,28 @@ fun RegisScreen(){
             )
             Spacer(modifier = Modifier.weight(1f))
             OutlinedButton(
-                onClick = { /*TODO*/ },
+                onClick = {
+                    if (validateRegistrationInputs(
+                            teksRegisEmail,
+                            teksRegisNomer,
+                            teksCretedPassword,
+                            teksConfirmPassword
+                        )
+                    ) {
+                        register(auth, firestore, teksRegisEmail, teksCretedPassword, teksRegisNomer) { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            if (message.contains("successful")) {
+                                navController.navigate("login")
+                            }
+                        }
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Invalid inputs. Please check your information.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 40.dp)
@@ -218,8 +233,7 @@ fun RegisScreen(){
                 colors = androidx.wear.compose.material.ButtonDefaults.buttonColors(
                     backgroundColor = "#2F70B5".color// Warna latar belakang tombol
                 ),
-            )
-            {
+            ) {
                 Text(
                     text = "Daftar",
                     color = Color.White,
@@ -229,18 +243,68 @@ fun RegisScreen(){
                 )
             }
         }
-        
     }
+}
+
+fun validateRegistrationInputs(
+    email: String,
+    phone: String,
+    password: String,
+    confirmPassword: String,
+): Boolean {
+    return email.isNotEmpty() &&
+            phone.isNotEmpty() &&
+            password.isNotEmpty() &&
+            confirmPassword.isNotEmpty() &&
+            password == confirmPassword
 }
 
 //hex warna menjadi string
-    val String.colorRegis
+val String.colorRegis
     get()= Color(android.graphics.Color.parseColor(this))
 
-@Preview
-@Composable
-fun RegisScreenPreview(){
-    Surface {
-        RegisScreen()
-    }
+fun register(
+    auth: FirebaseAuth,
+    firestore: FirebaseFirestore,
+    email: String,
+    password: String,
+    phone: String,
+    callback: (String) -> Unit
+) {
+    auth.createUserWithEmailAndPassword(email, password)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val user = auth.currentUser
+                user?.let {
+                    addUserToFirestore(firestore, it.uid, email, phone) { message ->
+                        callback(message)
+                    }
+                } ?: callback("Registration failed: User is null")
+            } else {
+                callback("Registration failed: ${task.exception?.message}")
+            }
+        }
 }
+
+fun addUserToFirestore(
+    firestore: FirebaseFirestore,
+    uid: String,
+    email: String,
+    phone: String,
+    callback: (String) -> Unit
+) {
+    val user = hashMapOf(
+        "uid" to uid,
+        "email" to email,
+        "phone" to phone
+    )
+    firestore.collection("users")
+        .document(uid)
+        .set(user)
+        .addOnSuccessListener {
+            callback("Registration successful!")
+        }
+        .addOnFailureListener { e ->
+            callback("User registration successful but failed to add user to Firestore: ${e.message}")
+        }
+    }
