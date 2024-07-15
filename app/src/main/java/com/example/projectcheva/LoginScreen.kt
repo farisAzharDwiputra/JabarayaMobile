@@ -1,7 +1,6 @@
 package com.example.projectcheva
 
 import android.content.Context
-import android.graphics.Color.parseColor
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -20,6 +19,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,19 +34,27 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.projectcheva.presentation.sign_in.SignInState
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInClient: GoogleSignInClient) {
+fun LoginScreen(
+    auth: FirebaseAuth,
+    navController: NavController,
+    state: SignInState,
+    onSignInClick: () -> Unit,
+    onFacebookLoginClick: () -> Unit
+) {
+
     val context = LocalContext.current
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+        }
+    }
 
     // Set default font to Urbanist
     val fontFamily = FontFamily(
@@ -72,7 +80,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInCl
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = "#c4e1ff".color)
+            .background(color = "#c4e1ff".colorRegis)
     ) {
         Column(
             modifier = Modifier
@@ -174,20 +182,16 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInCl
                 fontWeight = FontWeight.Normal
             )
             OutlinedButton(
-                onClick = {
-                    // Trigger the Google sign-in intent
-                    val signInIntent = googleSignInClient.signInIntent
-                    (context as MainActivity).googleSignInLauncher.launch(signInIntent)
-                          },
+                onClick = { onSignInClick() },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 15.dp)
+                    .padding(bottom = 5.dp)
                     .padding(horizontal = 15.dp),
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.White // Warna latar belakang tombol
                 ),
-                border = BorderStroke(2.dp, "#D9D9D9".color)
+                border = BorderStroke(2.dp, "#D9D9D9".colorRegis)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_google),
@@ -206,7 +210,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInCl
                 )
             }
             OutlinedButton(
-                onClick = { /* TODO: Add Facebook Sign-In functionality */ },
+                onClick = { onFacebookLoginClick() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 5.dp)
@@ -215,7 +219,7 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInCl
                 colors = ButtonDefaults.outlinedButtonColors(
                     contentColor = Color.White // Warna latar belakang tombol
                 ),
-                border = BorderStroke(2.dp, "#D9D9D9".color)
+                border = BorderStroke(2.dp, "#D9D9D9".colorRegis)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.icon_facebook),
@@ -233,68 +237,50 @@ fun LoginScreen(auth: FirebaseAuth, navController: NavController, googleSignInCl
                     fontWeight = FontWeight.Normal
                 )
             }
-            Spacer(modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.padding(10.dp))
             OutlinedButton(
                 onClick = {
-                    if (teksEmail.isEmpty() || teksPassword.isEmpty()) {
-                        Toast.makeText(context, "Email and password must not be empty", Toast.LENGTH_SHORT).show()
-                    } else {
-                        login(auth, teksEmail, teksPassword, context) { message ->
-                            if (message == "Login successful!") {
-                                // Navigate to the home screen
-                                navController.navigate("home")
-                            } else {
-                                // Show error message
-                                println(message)
-                            }
-                        }
-                    }
+                    loginWithEmailAndPassword(teksEmail, teksPassword, context, auth, navController)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 30.dp)
-                    .padding(horizontal = 90.dp),
-                shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = "#2F70B5".color // Warna latar belakang tombol
+                    .padding(bottom = 10.dp)
+                    .padding(horizontal = 15.dp),
+                shape = RoundedCornerShape(20.dp),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = "#3678E9".colorRegis,
+                    contentColor = Color.White
                 )
             ) {
                 Text(
                     text = "Masuk",
                     color = Color.White,
-                    fontSize = 24.sp,
+                    fontSize = 16.sp,
                     fontFamily = fontFamily,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
     }
 }
 
-// Convert hex color string to Color object
-val String.color: Color
-    get() = Color(parseColor(this))
-
-fun login(auth: FirebaseAuth, email: String, password: String, context: Context, callback: (String) -> Unit) {
-    auth.signInWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                callback("Login successful!")
-                Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
-            } else {
-                val message = "Login failed: ${task.exception?.message}"
-                callback(message)
-                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+private fun loginWithEmailAndPassword(
+    email: String,
+    password: String,
+    context: Context,
+    auth: FirebaseAuth,
+    navController: NavController
+) {
+    if (email.isNotEmpty() && password.isNotEmpty()) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    navController.navigate("home")
+                } else {
+                    Toast.makeText(context, "Login gagal: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
+                }
             }
-        }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    val auth = FirebaseAuth.getInstance()
-    val navController = rememberNavController()
-    val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-    val googleSignInClient = GoogleSignIn.getClient(MainActivity(), gso)
-    LoginScreen(auth, navController, googleSignInClient)
+    } else {
+        Toast.makeText(context, "Email dan password harus diisi.", Toast.LENGTH_SHORT).show()
+    }
 }

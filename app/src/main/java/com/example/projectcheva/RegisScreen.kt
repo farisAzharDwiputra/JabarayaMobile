@@ -34,6 +34,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.OutlinedButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -230,8 +231,8 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                     .size(60.dp)
                     .padding(horizontal = 90.dp),
                 shape = RoundedCornerShape(30.dp),
-                colors = androidx.wear.compose.material.ButtonDefaults.buttonColors(
-                    backgroundColor = "#2F70B5".color// Warna latar belakang tombol
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = "#2F70B5".colorRegis// Warna latar belakang tombol
                 ),
             ) {
                 Text(
