@@ -25,6 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projectcheva.presentation.sign_in.GoogleAuthUiClient
 import com.example.projectcheva.presentation.sign_in.SignInViewModel
+import com.example.projectcheva.screen.LoginScreen
+import com.example.projectcheva.screen.ProfileScreen
 import com.example.projectcheva.ui.theme.ProjectChevaTheme
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -135,20 +137,18 @@ class AuthActivity : ComponentActivity() {
                         composable("profile") {
                             ProfileScreen(
                                 auth = auth,
-                                navController = navController,
-                                userData = googleAuthUiClient.getSignedInUser(),
-                                onSignOut = {
-                                    lifecycleScope.launch {
-                                        googleAuthUiClient.signOut()
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Signed Out",
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                        navController.popBackStack()
-                                    }
+                                userData = googleAuthUiClient.getSignedInUser()
+                            ) {
+                                lifecycleScope.launch {
+                                    googleAuthUiClient.signOut()
+                                    Toast.makeText(
+                                        applicationContext,
+                                        "Signed Out",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    navController.popBackStack()
                                 }
-                            )
+                            }
                         }
                     }
                 }

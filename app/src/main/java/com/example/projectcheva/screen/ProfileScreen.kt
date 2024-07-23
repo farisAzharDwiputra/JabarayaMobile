@@ -1,6 +1,5 @@
-package com.example.projectcheva
+package com.example.projectcheva.screen
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.projectcheva.presentation.sign_in.UserData
 import com.google.firebase.auth.FirebaseAuth
@@ -28,11 +26,10 @@ import com.google.firebase.auth.FirebaseAuth
 @Composable
 fun ProfileScreen(
     auth: FirebaseAuth,
-    navController: NavController,
     userData: UserData?,
     onSignOut: () -> Unit
-    ) {
-    val context = LocalContext.current
+) {
+    LocalContext.current
 
     Column(
         modifier = Modifier

@@ -1,4 +1,4 @@
-package com.example.projectcheva
+package com.example.projectcheva.screen
 
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.OutlinedButton
+import com.example.projectcheva.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 

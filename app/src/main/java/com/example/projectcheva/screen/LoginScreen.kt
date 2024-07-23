@@ -1,4 +1,4 @@
-package com.example.projectcheva
+package com.example.projectcheva.screen
 
 import android.content.Context
 import android.widget.Toast
@@ -37,6 +37,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.projectcheva.R
 import com.example.projectcheva.presentation.sign_in.SignInState
 import com.google.firebase.auth.FirebaseAuth
 

@@ -1,14 +1,12 @@
 package com.example.projectcheva.presentation.sign_in
 
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class SignInViewModel: ViewModel() {
 
-    private val auth = FirebaseAuth.getInstance()
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
