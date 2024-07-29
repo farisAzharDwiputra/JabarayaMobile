@@ -109,7 +109,7 @@ fun RegisScreen(){
             }
             Image(
                 painter = painterResource(id = R.drawable.logo),
-                contentDescription = "",
+                contentDescription = null,
                 modifier = Modifier
                     .size(220.dp)
                     .padding(start = 30.dp)
