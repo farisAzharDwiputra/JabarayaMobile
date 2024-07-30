@@ -180,7 +180,5 @@ val String.Companion
 @Composable
 @ExperimentalWearMaterialApi
 fun OtpScreenPreview() {
-    Surface {
         OtpScreen()
-    }
 }

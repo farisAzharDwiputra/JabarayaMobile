@@ -48,7 +48,7 @@ fun SuccessScreen(onContinue: () -> Unit) {
             modifier = Modifier
                 .size(150.dp)
                 .clip(CircleShape)
-                .background(color = Color.Green),
+                .background(color = Color.Cyan),
             contentAlignment = Alignment.Center
         ) {
             Image(

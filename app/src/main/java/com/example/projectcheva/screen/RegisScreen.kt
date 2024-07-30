@@ -31,12 +31,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.OutlinedButton
 import com.example.projectcheva.R
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -310,3 +312,34 @@ fun addUserToFirestore(
             callback("User registration successful but failed to add user to Firestore: ${e.message}")
         }
     }
+
+@Preview
+@Composable
+fun RegisPreview(){
+    val context = LocalContext.current
+    FirebaseApp.initializeApp(context)
+    val auth = FirebaseAuth.getInstance()
+    val firestore = FirebaseFirestore.getInstance()
+    RegisScreen(auth, firestore, navController = NavController(context))
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

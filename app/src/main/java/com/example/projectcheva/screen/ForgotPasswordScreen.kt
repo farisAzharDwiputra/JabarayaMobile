@@ -152,7 +152,5 @@ val String.color
 @Composable
 @ExperimentalWearMaterialApi
 fun ForgotPasswordScreenPreview() {
-    Surface {
         ForgotPasswordScreen()
-    }
 }

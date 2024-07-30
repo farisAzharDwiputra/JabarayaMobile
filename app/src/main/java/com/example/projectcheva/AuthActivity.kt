@@ -14,16 +14,21 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.projectcheva.presentation.sign_in.GoogleAuthUiClient
+import com.example.projectcheva.presentation.sign_in.SignInState
 import com.example.projectcheva.presentation.sign_in.SignInViewModel
 import com.example.projectcheva.screen.LoginScreen
 import com.example.projectcheva.screen.ProfileScreen
@@ -35,6 +40,7 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.identity.Identity
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -174,6 +180,7 @@ class AuthActivity : ComponentActivity() {
         )
     }
 
+    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n      which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
@@ -219,5 +226,19 @@ class AuthActivity : ComponentActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
+    }
+}
+
+@Preview
+@Composable
+fun PreviewLoginScreen() {
+    FirebaseApp.initializeApp(LocalContext.current)
+    val auth = FirebaseAuth.getInstance()
+    val state = SignInState(isSignInSuccesfull = false, signInError = null, isFacebookSignInSuccessful = false)
+    LoginScreen(
+        auth = auth,
+        navController = NavController(LocalContext.current),
+        state,
+        onSignInClick = { /*TODO*/ }) {
     }
 }

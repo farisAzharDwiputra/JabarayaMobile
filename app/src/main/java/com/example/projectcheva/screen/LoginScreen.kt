@@ -34,12 +34,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.projectcheva.R
 import com.example.projectcheva.presentation.sign_in.SignInState
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+
 
 @Composable
 fun LoginScreen(
@@ -285,3 +288,29 @@ private fun loginWithEmailAndPassword(
         Toast.makeText(context, "Email dan password harus diisi.", Toast.LENGTH_SHORT).show()
     }
 }
+
+@Preview
+@Composable
+fun PreviewLoginScreen() {
+    val context = LocalContext.current
+    FirebaseApp.initializeApp(context)
+    val auth = FirebaseAuth.getInstance()
+    val state = SignInState(isSignInSuccesfull = false, signInError = null, isFacebookSignInSuccessful = false)
+    LoginScreen(
+        auth = auth,
+        navController = NavController(context),
+        state,
+        onSignInClick = { /*TODO*/ }) {
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
