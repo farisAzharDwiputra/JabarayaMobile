@@ -14,7 +14,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -30,10 +29,11 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.projectcheva.R
 
 @Composable
@@ -53,11 +53,12 @@ fun ForgotPasswordScreen() {
     )
 
     var email by remember { mutableStateOf("") }
+    val buttonColor = if (email.isEmpty()) "#838080".color else "#2F70B5".color
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = "#c4e1ff".color)
+            .background(color = "#68B1FF".color)
     ) {
         Column(
             modifier = Modifier
@@ -89,7 +90,8 @@ fun ForgotPasswordScreen() {
                 contentDescription = "",
                 modifier = Modifier
                     .size(220.dp)
-                    .align(Alignment.CenterHorizontally)
+                    .align(Alignment.End)
+                    .padding(start = 24.dp)
             )
         }
         Column(
@@ -99,20 +101,31 @@ fun ForgotPasswordScreen() {
                     Color.White,
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
                 ),
-            horizontalAlignment = Alignment.CenterHorizontally,
+            //horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            // Add text above the text field with bold font
+            Text(
+                text = "Email",
+                color = Color.Black,
+                fontSize = 16.sp,
+                fontFamily = fontFamily,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(start = 30.dp, bottom = 10.dp)
+            )
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp)
                     .padding(horizontal = 15.dp),
                 value = email,
                 onValueChange = { newEmail ->
                     email = newEmail
                 },
                 label = {
-                    Text(text = "Masukkan Email")
+                    Text(
+                        text = "Masukkan Email"
+                    )
                 },
                 isError = false,
                 keyboardOptions = KeyboardOptions(
@@ -127,7 +140,7 @@ fun ForgotPasswordScreen() {
                 onClick = { /* TODO: Implement reset password functionality */ },
                 shape = RoundedCornerShape(30.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = "#2F70B5".color
+                    containerColor = buttonColor
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -144,9 +157,6 @@ fun ForgotPasswordScreen() {
         }
     }
 }
-
-val String.color
-    get() = Color(parseColor(this))
 
 @Preview
 @Composable

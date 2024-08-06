@@ -1,4 +1,4 @@
-package com.example.projectcheva
+package com.example.projectcheva.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,28 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.projectcheva.FontProvider
 
-@Preview
 @Composable
-fun FavoritScreen() {
-
-    //set default font menjadi urbanist
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+fun FavoritScreen(navController: NavController) {
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(
@@ -43,11 +30,17 @@ fun FavoritScreen() {
                 text = "Favorit",
                 color = Color.Black,
                 fontSize = 16.sp,
-                fontFamily = fontFamily,
+                fontFamily = FontProvider.urbanist,
                 fontWeight = FontWeight.Normal
             )
 
         }
     }
+}
 
+@Preview
+@Composable
+fun FavoritPreview(){
+    val context = LocalContext.current
+    FavoritScreen(navController = NavController(context))
 }

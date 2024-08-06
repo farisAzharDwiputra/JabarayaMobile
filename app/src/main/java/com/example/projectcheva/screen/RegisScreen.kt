@@ -1,20 +1,31 @@
 package com.example.projectcheva.screen
 
-import android.widget.Toast
+import android.graphics.Color.parseColor
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,57 +37,64 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.wear.compose.material.ButtonDefaults
 import androidx.wear.compose.material.OutlinedButton
+import com.example.projectcheva.FontProvider
 import com.example.projectcheva.R
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.projectcheva.Screens
+import com.example.projectcheva.retrofit.AuthViewModel
+import com.example.projectcheva.retrofit.AuthViewModelFactory
 
 @Composable
-fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController: NavController) {
+fun RegisScreen(navController: NavController) {
+
     val context = LocalContext.current
-    remember { SnackbarHostState() }
-    //set default font menjadi urbanist
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+    val viewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(context))
+    // Set default font to Urbanist
+    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var passwordConfirmation by remember { mutableStateOf("") }
+    var errorMessage by remember { mutableStateOf("") }
+    var teksRegisEmail by remember { mutableStateOf("") }
+    var teksRegisNomer by remember { mutableStateOf("") }
+    var teksCretedPassword by remember { mutableStateOf("") }
+    var teksConfirmPassword by remember { mutableStateOf("") }
 
-    var teksRegisEmail by remember {
-        mutableStateOf("")
-    }
-    var teksRegisNomer by remember {
-        mutableStateOf("")
-    }
-    var teksCretedPassword by remember {
-        mutableStateOf("")
-    }
-    var teksConfirmPassword by remember {
-        mutableStateOf("")
+    val isDataValid = remember(teksRegisEmail, teksRegisNomer, teksCretedPassword, teksConfirmPassword) {
+        teksRegisEmail.isNotEmpty() && teksRegisNomer.isNotEmpty() && teksCretedPassword.isNotEmpty() && teksConfirmPassword.isNotEmpty()
     }
 
+    val countryCodes = listOf("+62", "+1", "+91")
+    var selectedCountryCode by remember { mutableStateOf("+62") }
+    val borderColor = "#838080".color
+
+    fun formatPhoneNumber(countryCode: String, phoneNumber: String): String {
+        return if (countryCode == "+62") {
+            "0" + phoneNumber.substringAfter(countryCode)
+        } else {
+            countryCode + phoneNumber
+        }
+    }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = "#c4e1ff".colorRegis)
+            .background(color = "#68B1FF".color)
     ) {
         Box(
             modifier = Modifier
@@ -88,20 +106,20 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                     .align(Alignment.TopStart)
                     .padding(vertical = 80.dp)
                     .padding(end = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = "REGISTER",
                     color = Color.Black,
                     fontSize = 32.sp,
-                    fontFamily = fontFamily,
+                    fontFamily = FontProvider.urbanist,
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
                     text = "Jelajahi Jabaraya!",
                     color = Color.Black,
                     fontSize = 20.sp,
-                    fontFamily = fontFamily,
+                    fontFamily = FontProvider.urbanist,
                     fontWeight = FontWeight.Medium
                 )
             }
@@ -120,7 +138,7 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                 .background(
                     Color.White,
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
-                ),
+                )
         ) {
             OutlinedTextField(
                 modifier = Modifier
@@ -130,40 +148,48 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                     .size(70.dp)
                     .padding(horizontal = 20.dp),
                 value = teksRegisEmail,
-                onValueChange = { inputEmail ->
-                    teksRegisEmail = inputEmail
-                },
-                label = {
-                    Text(text = "Masukan Email")
-                },
+                onValueChange = { inputEmail -> teksRegisEmail = inputEmail },
+                label = { Text(text = "Masukan Email") },
                 isError = false,
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 singleLine = true,
                 maxLines = 1,
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = borderColor,
+                    unfocusedBorderColor = borderColor
+                )
             )
-            OutlinedTextField(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 20.dp)
                     .size(70.dp)
                     .padding(horizontal = 20.dp),
-                value = teksRegisNomer,
-                onValueChange = { inputNomer ->
-                    teksRegisNomer = inputNomer
-                },
-                label = {
-                    Text(text = "Masukan Nomer Telepon")
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
-                singleLine = true,
-                maxLines = 1,
-                shape = RoundedCornerShape(20.dp)
-            )
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CustomOutlinedBox(
+                    selectedCountryCode = selectedCountryCode,
+                    onCountryCodeSelected = { selectedCountryCode = it },
+                    countryCodes = countryCodes,
+                    borderColor = borderColor
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                OutlinedTextField(
+                    modifier = Modifier.weight(1f),
+                    value = teksRegisNomer,
+                    onValueChange = { inputNomer -> teksRegisNomer = inputNomer },
+                    label = { Text(text = "Masukan Nomer Telepon") },
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    singleLine = true,
+                    maxLines = 1,
+                    shape = RoundedCornerShape(20.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = borderColor,
+                        unfocusedBorderColor = borderColor
+                    )
+                )
+            }
             OutlinedTextField(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -171,19 +197,17 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                     .size(70.dp)
                     .padding(horizontal = 20.dp),
                 value = teksCretedPassword,
-                onValueChange = { createdPassword ->
-                    teksCretedPassword = createdPassword
-                },
-                label = {
-                    Text(text = "Buat Kata Sandi")
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Next
-                ),
+                onValueChange = { createdPassword -> teksCretedPassword = createdPassword },
+                label = { Text(text = "Buat Kata Sandi") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                 singleLine = true,
                 maxLines = 1,
                 visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = borderColor,
+                    unfocusedBorderColor = borderColor
+                )
             )
             OutlinedTextField(
                 modifier = Modifier
@@ -192,57 +216,74 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
                     .size(70.dp)
                     .padding(horizontal = 20.dp),
                 value = teksConfirmPassword,
-                onValueChange = { confirmPassword ->
-                    teksConfirmPassword = confirmPassword
-                },
-                label = {
-                    Text(text = "Buat Kata Sandi")
-                },
-                keyboardOptions = KeyboardOptions(
-                    imeAction = ImeAction.Done
-                ),
+                onValueChange = { confirmPassword -> teksConfirmPassword = confirmPassword },
+                label = { Text(text = "Konfirmasi Kata Sandi") },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 visualTransformation = PasswordVisualTransformation(),
-                shape = RoundedCornerShape(20.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = borderColor,
+                    unfocusedBorderColor = borderColor
+                )
             )
+            //Spacer(modifier = Modifier.weight(1f))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Sudah punya akun? ")
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Black)) {
+                            append("Masuk disini")
+                        }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .clickable {
+                           navController.navigate(Screens.Login.route)
+                        },
+                    fontFamily = FontProvider.urbanist,
+                    fontSize = 16.sp,
+                    color = Color.Black,
+                    textAlign = TextAlign.Center
+                )
+            }
+
             Spacer(modifier = Modifier.weight(1f))
+
             OutlinedButton(
                 onClick = {
-                    if (validateRegistrationInputs(
-                            teksRegisEmail,
-                            teksRegisNomer,
-                            teksCretedPassword,
-                            teksConfirmPassword
-                        )
-                    ) {
-                        register(auth, firestore, teksRegisEmail, teksCretedPassword, teksRegisNomer) { message ->
-                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                            if (message.contains("successful")) {
-                                navController.navigate("login")
+                    viewModel.register(name, email, phone, password, passwordConfirmation, selectedCountryCode) { success, message ->
+                        if (success) {
+                            // Debug log
+                            Log.d("RegisterScreen", "Registration successful. Switching to LoginScreen.")
+                            navController.navigate("login") {
+                                popUpTo("register") { inclusive = true }
                             }
+                        } else {
+                            errorMessage = message
+                            // Debug log
+                            Log.d("RegisterScreen", "Registration failed: $message")
                         }
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Invalid inputs. Please check your information.",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 },
+                enabled = isDataValid,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 40.dp)
                     .size(60.dp)
                     .padding(horizontal = 90.dp),
                 shape = RoundedCornerShape(30.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = "#2F70B5".colorRegis// Warna latar belakang tombol
+                colors = androidx.wear.compose.material.ButtonDefaults.buttonColors(
+                    backgroundColor = if (isDataValid) "#2F70B5".color else "#838080".color // Conditional color change
                 ),
             ) {
                 Text(
                     text = "Daftar",
                     color = Color.White,
                     fontSize = 24.sp,
-                    fontFamily = fontFamily,
+                    fontFamily = FontProvider.urbanist,
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -250,96 +291,61 @@ fun RegisScreen(auth: FirebaseAuth, firestore: FirebaseFirestore, navController:
     }
 }
 
-fun validateRegistrationInputs(
-    email: String,
-    phone: String,
-    password: String,
-    confirmPassword: String,
-): Boolean {
-    return email.isNotEmpty() &&
-            phone.isNotEmpty() &&
-            password.isNotEmpty() &&
-            confirmPassword.isNotEmpty() &&
-            password == confirmPassword
-}
-
-//hex warna menjadi string
-val String.colorRegis
-    get()= Color(android.graphics.Color.parseColor(this))
-
-fun register(
-    auth: FirebaseAuth,
-    firestore: FirebaseFirestore,
-    email: String,
-    password: String,
-    phone: String,
-    callback: (String) -> Unit
+@Composable
+fun CustomOutlinedBox(
+    selectedCountryCode: String,
+    onCountryCodeSelected: (String) -> Unit,
+    countryCodes: List<String>,
+    borderColor: Color
 ) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                val user = auth.currentUser
-                user?.let {
-                    addUserToFirestore(firestore, it.uid, email, phone) { message ->
-                        callback(message)
+    var expanded by remember { mutableStateOf(false) }
+    Box(
+        modifier = Modifier
+            .border(
+                width = 1.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clickable { expanded = true }
+            .background(Color.White, RoundedCornerShape(20.dp))
+            .padding(8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = selectedCountryCode,
+                color = "#5C5C5C".color,
+                fontFamily = FontProvider.urbanist,
+                fontWeight = FontWeight.ExtraBold)
+            Icon(Icons.Filled.ArrowDropDown, contentDescription = "Dropdown Arrow")
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false }
+        ) {
+            countryCodes.forEach { code ->
+                DropdownMenuItem(
+                    text = { Text(text = code) },
+                    onClick = {
+                        onCountryCodeSelected(code)
+                        expanded = false
                     }
-                } ?: callback("Registration failed: User is null")
-            } else {
-                callback("Registration failed: ${task.exception?.message}")
+                )
             }
         }
+    }
 }
 
-fun addUserToFirestore(
-    firestore: FirebaseFirestore,
-    uid: String,
-    email: String,
-    phone: String,
-    callback: (String) -> Unit
-) {
-    val user = hashMapOf(
-        "uid" to uid,
-        "email" to email,
-        "phone" to phone
-    )
-    firestore.collection("users")
-        .document(uid)
-        .set(user)
-        .addOnSuccessListener {
-            callback("Registration successful!")
-        }
-        .addOnFailureListener { e ->
-            callback("User registration successful but failed to add user to Firestore: ${e.message}")
-        }
-    }
+// Hex color extension
+val String.color: Color
+    get() = Color(parseColor(this))
 
 @Preview
 @Composable
-fun RegisPreview(){
-    val context = LocalContext.current
-    FirebaseApp.initializeApp(context)
-    val auth = FirebaseAuth.getInstance()
-    val firestore = FirebaseFirestore.getInstance()
-    RegisScreen(auth, firestore, navController = NavController(context))
+fun RegisScreenPreview() {
+    Surface {
+        val context = LocalContext.current
+        RegisScreen(navController = NavController(context))
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

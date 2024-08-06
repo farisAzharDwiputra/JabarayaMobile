@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">ProjectCheva</string>
-    <!-- Web client ID for Google Sign-In -->
-    <string name="default_web_client_id">954872616926-n19em3335h18tn02fp3me2sloqedr541.apps.googleusercontent.com</string>
+    <string name="maps_api">AIzaSyBsZ2s1Dcx5Jx9mDLQ6_kNslS6z0f9V4dQ</string>
     <string name="facebook_app_id">1003539564824763</string>
     <string name="facebook_client_token">EAAOQtsNHiLsBOZBzUTGp2y4D7StZCUE2wikeq4QqHrpAgUZAppPpPWShYeRVlyalrksZCWFgd25p5AD47ZCBC12QCweqKyq94kSsFKztfPhZAZC40n7EjQqfOuyEpQj7D1qUADoxODYvUlKuh0Bxvnc9HGlSCQdmVM1CdL0qsIR9UuqAQs7gVYFhTfc42XBPOJ37JHgLdIT0ERjZBOVU</string>
 </resources>

@@ -18,28 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.projectcheva.FontProvider
 import com.example.projectcheva.R
 
 @Composable
-fun DetailBudaya(){
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+fun DetailBudaya(navController: NavController){
 
     LazyColumn(
         modifier = Modifier
@@ -74,7 +64,7 @@ fun DetailBudaya(){
                             text = "BUDAYA",
                             color = Color.Black,
                             fontSize = 32.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
@@ -105,7 +95,7 @@ fun DetailBudaya(){
                             text = "Batagor Khas Bandung",
                             color = Color.Black,
                             fontSize = 20.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.Center)
@@ -120,7 +110,7 @@ fun DetailBudaya(){
                             text = "By Tiyas Insania D.",
                             color = Color.Black,
                             fontSize = 16.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -136,7 +126,7 @@ fun DetailBudaya(){
                             text = "Definisi",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -148,7 +138,7 @@ fun DetailBudaya(){
                                     "Secara umum, batagor dibuat dari tahu yang dilembutkan dan diisi dengan adonan berbahan ikan tenggiri dan tepung tapioka lalu dibentuk menyerupai bola yang digoreng dalam minyak panas selama beberapa menit hingga matang. Variasi lainnya yaitu siomay, digoreng dan dihidangkan bersama batagor dan dikombinasikan dengan bumbu kacang, kecap manis, sambal, dan air perasan jeruk nipis sebagai pelengkap.[2] Saat ini, batagor tidak hanya berbentuk bulat saja, namun terdapat varian batagor yang dibalut dengan kulit pangsit yang digoreng. Batagor dengan varian ini banyak ditemukan di Jawa Barat, khususnya Bandung. Bahkan, penyajian batagor tidak hanya dengan bumbu kacang yang khasnya saja, tetapi ada juga batagor yang disajikan dengan kuah seperti bakso. Batagor jenis ini dikenal dengan nama batagor kuah. Beberapa pedagang juga ada yang menyajikan batagor dengan tambahan irisan timun yang menambah cita rasa batagor semakin enak.",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -165,7 +155,7 @@ fun DetailBudaya(){
                             text = "Sejarah",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -177,7 +167,7 @@ fun DetailBudaya(){
                                     "Secara umum, batagor dibuat dari tahu yang dilembutkan dan diisi dengan adonan berbahan ikan tenggiri dan tepung tapioka lalu dibentuk menyerupai bola yang digoreng dalam minyak panas selama beberapa menit hingga matang. Variasi lainnya yaitu siomay, digoreng dan dihidangkan bersama batagor dan dikombinasikan dengan bumbu kacang, kecap manis, sambal, dan air perasan jeruk nipis sebagai pelengkap.[2] Saat ini, batagor tidak hanya berbentuk bulat saja, namun terdapat varian batagor yang dibalut dengan kulit pangsit yang digoreng. Batagor dengan varian ini banyak ditemukan di Jawa Barat, khususnya Bandung. Bahkan, penyajian batagor tidak hanya dengan bumbu kacang yang khasnya saja, tetapi ada juga batagor yang disajikan dengan kuah seperti bakso. Batagor jenis ini dikenal dengan nama batagor kuah. Beberapa pedagang juga ada yang menyajikan batagor dengan tambahan irisan timun yang menambah cita rasa batagor semakin enak.",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Normal,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -193,7 +183,7 @@ fun DetailBudaya(){
                             text = "Baca Juga",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -206,7 +196,7 @@ fun DetailBudaya(){
                                     "- Tips Menghindari Batagor Boraks ala \n" +
                                     "- Tutorial Cara Membuat Batagor Terenak ala Aufa",
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Normal,
                             color = "#2596be".color,
                             modifier = Modifier
@@ -224,7 +214,7 @@ fun DetailBudaya(){
                             text = "Rekomendasi Tempat",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopStart)
@@ -243,5 +233,6 @@ fun DetailBudaya(){
 @Preview
 @Composable
 fun DetailBudayaPreview(){
-    DetailBudaya()
+    val context = LocalContext.current
+    DetailBudaya(navController = NavController(context))
 }

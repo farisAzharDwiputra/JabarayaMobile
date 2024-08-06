@@ -1,4 +1,6 @@
-package com.example.projectcheva
+@file:JvmName("BudayaScreenKt")
+
+package com.example.projectcheva.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,27 +21,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.projectcheva.FontProvider
+import com.example.projectcheva.R
 
 @Composable
-fun DetailBerita(){
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+fun DetailBerita(navController: NavController){
 
     LazyColumn(
         modifier = Modifier
@@ -62,19 +55,11 @@ fun DetailBerita(){
                             .fillMaxWidth()
                             .padding(top = 20.dp),
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.icon_arrow),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.TopStart)
-                        )
-
                         Text(
-                            text = "BUDAYA",
+                            text = "BERITA",
                             color = Color.Black,
                             fontSize = 32.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
@@ -89,7 +74,7 @@ fun DetailBerita(){
                 contentAlignment = Alignment.TopCenter
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.gambar_event),
+                    painter = painterResource(id = R.drawable.berita_terkini),
                     contentDescription = null,
                     modifier = Modifier
                         .size(380.dp)
@@ -103,10 +88,10 @@ fun DetailBerita(){
                         .align(Alignment.Center)
                 ) {
                     Text(
-                        text = "Dunia Jurnalistik Berduka, Wartawan Senior Yusran Pare Meninggal Dunia, Dikebumikan di TPU Nagrog",
+                        text = "Warisan Budaya Tak Benda Kota Bandung Tingkat Provinsi dan Nasional 2018-2023",
                         color = Color.Black,
                         fontSize = 20.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(AbsoluteAlignment.CenterRight)
@@ -123,5 +108,6 @@ fun DetailBerita(){
 @Preview
 @Composable
 fun DetailBeritaPreview(){
-    DetailBerita()
+    val context = LocalContext.current
+    DetailBerita(navController = NavController(context))
 }

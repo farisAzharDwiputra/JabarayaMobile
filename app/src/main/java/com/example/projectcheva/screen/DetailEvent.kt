@@ -18,28 +18,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.projectcheva.FontProvider
 import com.example.projectcheva.R
 
 @Composable
-fun DetailEvent(){
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+fun DetailEvent(navController: NavController){
 
     LazyColumn(
         modifier = Modifier
@@ -74,7 +64,7 @@ fun DetailEvent(){
                             text = "EVENT",
                             color = Color.Black,
                             fontSize = 32.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .align(Alignment.TopCenter)
@@ -106,7 +96,7 @@ fun DetailEvent(){
                         text = "Pameran dan Workshop Seni Batik Jabar",
                         color = Color.Black,
                         fontSize = 20.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
@@ -122,7 +112,7 @@ fun DetailEvent(){
                         text = "By Tiyas Insania D.",
                         color = Color.Black,
                         fontSize = 16.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -138,7 +128,7 @@ fun DetailEvent(){
                         text = "Definisi",
                         color = Color.Black,
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -158,7 +148,7 @@ fun DetailEvent(){
                                 "Web : www.furindoarthamas.com",
                         color = Color.Black,
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -177,7 +167,7 @@ fun DetailEvent(){
                                 "Teknologi ini juga menjadi landasan dari fungsi kontrol suara pada perangkat sehari-hari seperti ponsel pintar, tablet, televisi, dan speaker tanpa kabel",
                         color = Color.Black,
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Normal,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -193,7 +183,7 @@ fun DetailEvent(){
                         text = "Baca Juga",
                         color = Color.Black,
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -206,7 +196,7 @@ fun DetailEvent(){
                                 "- Tips Menghindari Batagor Boraks ala \n" +
                                 "- Tutorial Cara Membuat Batagor Terenak ala Aufa",
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Normal,
                         color = "#2596be".color,
                         modifier = Modifier
@@ -224,7 +214,7 @@ fun DetailEvent(){
                         text = "Rekomendasi Tempat",
                         color = Color.Black,
                         fontSize = 14.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -243,5 +233,6 @@ fun DetailEvent(){
 @Preview
 @Composable
 fun DetailEventPreview(){
-    DetailEvent()
+    val context = LocalContext.current
+    DetailEvent(navController = NavController(context))
 }
