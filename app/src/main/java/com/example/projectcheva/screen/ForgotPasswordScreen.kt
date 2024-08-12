@@ -1,8 +1,8 @@
 package com.example.projectcheva.screen
 
-import android.graphics.Color.parseColor
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,9 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -34,23 +34,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.wear.compose.material.ExperimentalWearMaterialApi
+import com.example.projectcheva.FontProvider
 import com.example.projectcheva.R
 
 @Composable
 @ExperimentalWearMaterialApi
 fun ForgotPasswordScreen() {
-    // Set default font to Urbanist
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
+
+    val focusManager = LocalFocusManager.current
 
     var email by remember { mutableStateOf("") }
     val buttonColor = if (email.isEmpty()) "#838080".color else "#2F70B5".color
@@ -67,17 +58,17 @@ fun ForgotPasswordScreen() {
                 .padding(horizontal = 23.dp)
         ) {
             Text(
-                text = "LUPA PASSWORD",
+                text = "Lupa Kata Sandi?",
                 color = Color.Black,
                 fontSize = 32.sp,
-                fontFamily = fontFamily,
+                fontFamily = FontProvider.urbanist,
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
                 text = "Masukkan email anda untuk reset password",
                 color = Color.Black,
                 fontSize = 20.sp,
-                fontFamily = fontFamily,
+                fontFamily = FontProvider.urbanist,
                 fontWeight = FontWeight.Medium
             )
         }
@@ -100,8 +91,15 @@ fun ForgotPasswordScreen() {
                 .background(
                     Color.White,
                     shape = RoundedCornerShape(topStart = 30.dp, topEnd = 30.dp)
-                ),
-            //horizontalAlignment = Alignment.CenterHorizontally,
+                )
+                .pointerInput(Unit){
+                    detectTapGestures(
+                        onTap = {
+                            // Clear focus on tap
+                            focusManager.clearFocus()
+                        }
+                    )
+                },
             verticalArrangement = Arrangement.Center
         ) {
             // Add text above the text field with bold font
@@ -109,7 +107,7 @@ fun ForgotPasswordScreen() {
                 text = "Email",
                 color = Color.Black,
                 fontSize = 16.sp,
-                fontFamily = fontFamily,
+                fontFamily = FontProvider.urbanist,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(start = 30.dp, bottom = 10.dp)
@@ -150,7 +148,7 @@ fun ForgotPasswordScreen() {
                     text = "Kirim Email Reset",
                     color = Color.White,
                     fontSize = 24.sp,
-                    fontFamily = fontFamily,
+                    fontFamily = FontProvider.urbanist,
                     fontWeight = FontWeight.SemiBold
                 )
             }

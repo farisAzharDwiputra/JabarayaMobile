@@ -16,7 +16,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.AbsoluteAlignment
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,20 +35,20 @@ import com.example.projectcheva.topBarV1
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavController){
+fun HomeScreen(navController: NavController) {
 
-    LazyColumn (
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
         item {
-            //topbar
+            // Top bar
             topBarV1()
         }
 
         item {
-            //main content
+            // Main content
             Spacer(modifier = Modifier.height(28.dp))
             Column(
                 modifier = Modifier
@@ -61,7 +60,7 @@ fun HomeScreen(navController: NavController){
                         .align(Alignment.CenterHorizontally)
                 ) {
                     Text(
-                        text = "Buat Rencana Perjalanan Anda ",
+                        text = "Buat Rencana Perjalanan Anda",
                         color = Color.Black,
                         fontSize = 16.sp,
                         fontFamily = FontProvider.urbanist,
@@ -72,7 +71,7 @@ fun HomeScreen(navController: NavController){
                     )
                     Button(
                         onClick = {
-                                  navController.navigate(Screens.Plan.route)
+                            navController.navigate(Screens.Plan.route)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -105,19 +104,19 @@ fun HomeScreen(navController: NavController){
                     Spacer(modifier = Modifier.height(10.dp))
                     Column(
                         modifier = Modifier
-                            .align(AbsoluteAlignment.Right)
+                            .align(Alignment.End)
                     ) {
-                        Text(modifier = Modifier
-                            .clickable { navController.navigate(Screens.ListBerita.route) },
+                        Text(
                             text = "Selengkapnya.......",
                             color = Color.Black,
                             fontSize = 14.sp,
                             fontFamily = FontProvider.urbanist,
-                            fontWeight = FontWeight.Normal
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier.clickable { navController.navigate(Screens.ListBerita.route) }
                         )
                     }
                 }
-                //event
+                // Event
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     modifier = Modifier
@@ -136,7 +135,7 @@ fun HomeScreen(navController: NavController){
                     Spacer(modifier = Modifier.height(10.dp))
                     Column(
                         modifier = Modifier
-                            .align(AbsoluteAlignment.Right)
+                            .align(Alignment.End)
                     ) {
                         Text(
                             text = "Selengkapnya.......",
@@ -147,7 +146,7 @@ fun HomeScreen(navController: NavController){
                         )
                     }
                 }
-                //artikel
+                // Artikel
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     modifier = Modifier
@@ -163,11 +162,10 @@ fun HomeScreen(navController: NavController){
                 }
                 Column {
                     listIsiArtikel()
-
                     Spacer(modifier = Modifier.height(10.dp))
                     Column(
                         modifier = Modifier
-                            .align(AbsoluteAlignment.Right)
+                            .align(Alignment.End)
                     ) {
                         Text(
                             text = "Selengkapnya.......",
@@ -178,7 +176,7 @@ fun HomeScreen(navController: NavController){
                         )
                     }
                 }
-                //berita
+                // Budaya
                 Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     modifier = Modifier
@@ -194,11 +192,10 @@ fun HomeScreen(navController: NavController){
                 }
                 Column {
                     listDaftarIsiBudaya()
-
                     Spacer(modifier = Modifier.height(10.dp))
                     Column(
                         modifier = Modifier
-                            .align(AbsoluteAlignment.Right)
+                            .align(Alignment.End)
                     ) {
                         Text(
                             text = "Selengkapnya.......",
@@ -213,6 +210,7 @@ fun HomeScreen(navController: NavController){
         }
     }
 }
+
 @Preview
 @Composable
 fun HomeScreenPreview(){

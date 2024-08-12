@@ -19,5 +19,8 @@ object Screens {
     val EditProfile = Screen("edit_profile")
     val Loading = Screen("loading")
     val Plan = Screen("plan")
+    val LoggedProfile = Screen("logged_user")
+    val NotLoggedProfile = Screen("not_logged_user")
+    val facebook = Screen("facebook")
     data class Screen(val route: String)
 }

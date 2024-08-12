@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,8 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,7 +38,7 @@ fun listIsiArtikel(){
         .fillMaxSize()
         .background(Color.White)
     ){
-        items(3) { index->
+        items(3) {
             listArtikel()
         }
     }
@@ -47,20 +46,6 @@ fun listIsiArtikel(){
 
 @Composable
 fun listArtikel(){
-
-    //set default font menjadi urbanist
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold,FontWeight.Bold),
-        Font(R.font.urbanist_extrabold,FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight,FontWeight.ExtraLight),
-        Font(R.font.urbanist_light,FontWeight.Light),
-        Font(R.font.urbanist_medium,FontWeight.Medium),
-        Font(R.font.urbanist_regular,FontWeight.Normal),
-        Font(R.font.urbanist_semibold,FontWeight.SemiBold),
-        Font(R.font.urbanist_thin,FontWeight.Thin),
-    )
-
     Row( modifier = Modifier
         .fillMaxSize()
         .background(Color.White)
@@ -71,13 +56,19 @@ fun listArtikel(){
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             Card(
+                colors = CardColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Unspecified,
+                    disabledContentColor = Color.Unspecified,
+                    disabledContainerColor = Color.Unspecified
+                ),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(310.dp)
                     .border(
-                        width = 1.dp,                  // Width of the border
+                        width = 1.dp,
                         color = Color.LightGray,
-                        shape = RoundedCornerShape(8.dp),           // Color of the border
+                        shape = RoundedCornerShape(8.dp),
                     )
                     .shadow(
                         elevation = 6.dp,
@@ -114,7 +105,7 @@ fun listArtikel(){
                             text = "Warisan Budaya Tak Benda Kota Bandung Tingkat Provinsi dan Nasional 2018-2023",
                             color = Color.Black,
                             fontSize = 14.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier
                                 .padding(bottom = 65.dp)
@@ -133,7 +124,7 @@ fun listArtikel(){
                             text = "Oleh",
                             color = Color.Black,
                             fontSize = 10.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.Medium,
                             modifier = Modifier
                                 .padding(start = 25.dp)
@@ -151,7 +142,7 @@ fun listArtikel(){
                             text = "Muhammad Nur Shodiq",
                             color = "#2f70b5".color,
                             fontSize = 10.sp,
-                            fontFamily = fontFamily,
+                            fontFamily = FontProvider.urbanist,
                             fontWeight = FontWeight.SemiBold,
                             modifier = Modifier
                                 .padding(start = 50.dp)
@@ -181,7 +172,7 @@ fun listArtikel(){
                                 text = "Kuliner",
                                 color = "#2f70b5".color,
                                 fontSize = 10.sp,
-                                fontFamily = fontFamily,
+                                fontFamily = FontProvider.urbanist,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier
                                     .align(Alignment.Center)
@@ -215,7 +206,7 @@ fun listArtikel(){
                                     text = "20/05/2024",
                                     color = "#2f70b5".color,
                                     fontSize = 10.sp,
-                                    fontFamily = fontFamily,
+                                    fontFamily = FontProvider.urbanist,
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier
                                         .align(Alignment.Center)
@@ -223,11 +214,7 @@ fun listArtikel(){
                             }
                         }
                     }
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .align(Alignment.TopCenter)
-                    ) {
+                    Column {
                         Spacer(modifier = Modifier.weight(1f))
                         OutlinedButton(
                             onClick = { /*TODO*/ },
@@ -244,7 +231,7 @@ fun listArtikel(){
                                 text= "Baca Selengkapnya",
                                 color = Color.Black,
                                 fontSize = 11.sp,
-                                fontFamily = fontFamily,
+                                fontFamily = FontProvider.urbanist,
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)

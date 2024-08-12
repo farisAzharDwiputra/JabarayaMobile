@@ -106,5 +106,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.31.2-alpha")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.maps:google-maps-services:0.18.0")
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
+    implementation("com.google.android.libraries.places:places:latest_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 }

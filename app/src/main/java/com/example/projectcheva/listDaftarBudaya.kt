@@ -24,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,7 +36,7 @@ fun listDaftarIsiBudaya(){
         .fillMaxSize()
         .background(Color.White)
     ){
-        items(3) { index->
+        items(3) {
             listDaftarBudaya()
         }
     }
@@ -46,19 +44,6 @@ fun listDaftarIsiBudaya(){
 
 @Composable
 fun listDaftarBudaya(){
-
-    //set default font menjadi urbanist
-    val fontFamily = FontFamily(
-        Font(R.font.urbanist_black, FontWeight.Black),
-        Font(R.font.urbanist_bold, FontWeight.Bold),
-        Font(R.font.urbanist_extrabold, FontWeight.ExtraBold),
-        Font(R.font.urbanist_extralight, FontWeight.ExtraLight),
-        Font(R.font.urbanist_light, FontWeight.Light),
-        Font(R.font.urbanist_medium, FontWeight.Medium),
-        Font(R.font.urbanist_regular, FontWeight.Normal),
-        Font(R.font.urbanist_semibold, FontWeight.SemiBold),
-        Font(R.font.urbanist_thin, FontWeight.Thin),
-    )
 
     Row( modifier = Modifier
         .fillMaxSize()
@@ -91,7 +76,7 @@ fun listDaftarBudaya(){
                         text= "Tari di Bandung",
                         color = Color.Black,
                         fontSize = 16.sp,
-                        fontFamily = fontFamily,
+                        fontFamily = FontProvider.urbanist,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.TopStart)
@@ -134,7 +119,7 @@ fun listDaftarBudaya(){
                                 text= "Lihat lebih banyak",
                                 color = Color.Black,
                                 fontSize = 11.sp,
-                                fontFamily = fontFamily,
+                                fontFamily = FontProvider.urbanist,
                                 fontWeight = FontWeight.Medium,
                                 modifier = Modifier
                                     .align(Alignment.CenterVertically)
