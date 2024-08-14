@@ -42,7 +42,10 @@ import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.coroutines.delay
 
 @Composable
-fun MapScreen() {
+fun MapScreen(
+    initialPlace: LatLng? = null, // Initial place marker
+    destinationPlace: LatLng? = null // Destination place marker
+) {
     val context = LocalContext.current
     var hasLocationPermission by remember {
         mutableStateOf(
@@ -176,6 +179,22 @@ fun MapScreen() {
                             state = rememberMarkerState(position = it),
                             title = "Your Location",
                             snippet = "This is your current location"
+                        )
+                    }
+
+                    initialPlace?.let {
+                        Marker(
+                            state = rememberMarkerState(position = it),
+                            title = "Initial Place",
+                            snippet = "Initial place marker"
+                        )
+                    }
+
+                    destinationPlace?.let {
+                        Marker(
+                            state = rememberMarkerState(position = it),
+                            title = "Destination Place",
+                            snippet = "Destination place marker"
                         )
                     }
 

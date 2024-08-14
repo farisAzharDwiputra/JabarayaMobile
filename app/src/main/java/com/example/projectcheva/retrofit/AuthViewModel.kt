@@ -36,6 +36,7 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
@@ -48,6 +49,7 @@ open class AuthViewModel(private val context: Context) : ViewModel() {
 
     private val repository = AuthRepository()
     private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
     private val _loginState = MutableLiveData<Boolean>()
     val loginState: LiveData<Boolean> get() = _loginState
     private val _errorMessage = MutableLiveData<String?>()

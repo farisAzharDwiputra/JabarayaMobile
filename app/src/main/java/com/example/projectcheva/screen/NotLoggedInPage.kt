@@ -70,6 +70,7 @@ fun NotLoggedInPage(navController: NavController) {
                 Text(
                     text = "Log In",
                     fontFamily = FontProvider.urbanist,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
@@ -84,6 +85,7 @@ fun NotLoggedInPage(navController: NavController) {
                 Text(
                     text = "Register",
                     fontFamily = FontProvider.urbanist,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }

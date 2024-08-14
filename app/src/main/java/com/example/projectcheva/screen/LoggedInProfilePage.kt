@@ -28,12 +28,14 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -64,53 +66,69 @@ fun LoggedInProfilePage(
 ) {
     LocalContext.current
     val userProfile by viewModel.userProfile.observeAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     // Fetch user profile data based on the sign-in method
     LaunchedEffect(signInMethod) {
         viewModel.fetchUserProfile(signInMethod)
     }
 
-    LazyColumn(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        item {
-            Column(
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Loading...", style = MaterialTheme.typography.bodySmall)
+                }
+            }
+        } else {
+            LazyColumn(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(12.dp)
             ) {
+                item {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
 
-                // Header
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    text = "Profil",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = Color.Black
-                )
-                Text(
-                    text = "Profil Anda",
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(16.dp))
+                        // Header
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = "Profil",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = "Profil Anda",
+                            modifier = Modifier.align(Alignment.CenterHorizontally),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = Color.Black
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                // Profile Container
-                userProfile?.let {
-                    ProfileContainer(userProfile = it, navController = navController)
-                } ?: run {
-                    Text("User profile data is not available", color = Color.Red)
-                }
+                        // Profile Container
+                        userProfile?.let {
+                            ProfileContainer(userProfile = it, navController = navController)
+                        } ?: run {
+                            Text("User profile data is not available", color = Color.Red)
+                        }
 
-                // Travel Containers
-                TravelContainerSection()
+                        // Travel Containers
+                        TravelContainerSection()
 
-                Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-                    // Logout Button
-                    LogoutButton(viewModel = viewModel, navController = navController)
+                        Column(modifier = Modifier.align(Alignment.CenterHorizontally)) {
+                            // Logout Button
+                            LogoutButton(viewModel = viewModel, navController = navController)
+                        }
+                    }
                 }
             }
         }
@@ -143,9 +161,15 @@ fun ProfileContainer(userProfile: UserProfile, navController: NavController) {
                     fontWeight = FontWeight.ExtraBold,
                     color = Color.Black
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                val phoneEmailText = buildString {
+                    userProfile.phone?.let { append(it) }
+                    userProfile.phone?.let { if (userProfile.email != null) append(" • ") }
+                    userProfile.email?.let { append(it) }
+                }
                 Text(
-                    modifier = Modifier.padding(top = 16.dp),
-                    text = "${userProfile.phone} • ${userProfile.email}",
+                    modifier = Modifier.padding(top = 8.dp),
+                    text = phoneEmailText.ifEmpty { "No contact info available" },
                     fontFamily = FontProvider.urbanist,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Black

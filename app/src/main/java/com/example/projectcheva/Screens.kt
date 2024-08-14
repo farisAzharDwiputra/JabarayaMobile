@@ -20,7 +20,9 @@ object Screens {
     val Loading = Screen("loading")
     val Plan = Screen("plan")
     val LoggedProfile = Screen("logged_user")
-    val NotLoggedProfile = Screen("not_logged_user")
+    val NotLoggedPage = Screen("not_logged_user")
     val facebook = Screen("facebook")
+    val MapScreens = Screen("map?initialPlace={initialPlace}&destinationPlace={destinationPlace}")
+    val recomend = Screen("Rekomendasi")
     data class Screen(val route: String)
 }

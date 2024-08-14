@@ -180,58 +180,6 @@ enum class PasswordFieldType {
     CURRENT, NEW, CONFIRM
 }
 
-data class Destination(
-    val id: Int,
-    val startAt: String,
-    val endAt: String,
-    val note: String?,
-    val vehicle: String,
-    val travel_plan_id: Int,
-    val detail_location_id: Int,
-    val created_at: String,
-    val updated_at: String,
-    val financial_record: FinancialRecord,
-    val detail_location: DetailLocation
-)
-
-data class DestinationResponse(
-    val status: Boolean,
-    val statusCode: Int,
-    val message: String,
-    val data: List<Destination>
-)
-
-data class FinancialRecord(
-    val id: Int,
-    val transportation: Double,
-    val lodging: Double,
-    val consumption: Double,
-    val emergencyFund: Double,
-    val souvenir: Double,
-    val total: Double,
-    val destination_id: Int,
-    val created_at: String,
-    val updated_at: String
-)
-
-data class DetailLocation(
-    val id: Int,
-    val place_id: String,
-    val name: String,
-    val lat: Double,
-    val lng: Double,
-    val address: String,
-    val created_at: String,
-    val updated_at: String
-)
-
-data class UpdateDestinationResponse(
-    val status: Boolean,
-    val statusCode: Int,
-    val message: String,
-    val data: Destination
-)
-
 data class TravelPlan(
     val id: Int,
     val name: String,
@@ -242,8 +190,11 @@ data class TravelPlan(
     val startLocationId: Int,
     val userId: Int,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val startLocationLat: Double?,
+    val startLocationLng: Double?
 )
+
 
 data class TravelPlanResponse(
     val status: Boolean,
@@ -272,11 +223,76 @@ data class TravelPlanInput(
     val endAt: String
 )
 
+sealed class TravelMethod(val apiValue: String, val displayName: String, val icon: ImageVector) {
+    data object Car : TravelMethod("car", "Mobil", Icons.Filled.DirectionsCar)
+    data object Bus : TravelMethod("bus", "Bus", Icons.Filled.DirectionsBus)
+    data object Train : TravelMethod("train", "Kereta", Icons.Filled.Train)
+    data object Motorcycle : TravelMethod("motorcycle", "Motor", Icons.Filled.TwoWheeler)
+    data object Plane : TravelMethod("plane", "Pesawat", Icons.Filled.Flight)
+}
+
+// Data class for FinancialRecord
+data class FinancialRecord(
+    val id: Int,
+    val transportation: Double,
+    val lodging: Double,
+    val consumption: Double,
+    val emergencyFund: Double,
+    val souvenir: Double,
+    val total: Double,
+    @SerializedName("destination_id") val destinationId: Int,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
+)
+
+// Data class for DetailLocation
+data class DetailLocation(
+    val id: Int,
+    @SerializedName("place_id") val placeId: String,
+    val name: String,
+    val lat: Double,
+    val lng: Double,
+    val address: String,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
+)
+
+// Data class for the Destination
+data class Destination(
+    val id: Int,
+    @SerializedName("startAt") val startAt: String,
+    @SerializedName("endAt") val endAt: String,
+    val note: String?,
+    val vehicle: String,
+    @SerializedName("travel_plan_id") val travelPlanId: Int,
+    @SerializedName("detail_location_id") val detailLocationId: Int,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String,
+    @SerializedName("financial_record") val financialRecord: FinancialRecord,
+    @SerializedName("detail_location") val detailLocation: DetailLocation
+)
+
+// Data class for the API response
+data class DestinationResponse(
+    val status: Boolean,
+    @SerializedName("statusCode") val statusCode: Int,
+    val message: String,
+    val data: Destination
+)
+
+data class DestinationListResponse(
+    val status: Boolean,
+    @SerializedName("statusCode") val statusCode: Int,
+    val message: String,
+    val data: List<Destination>
+)
+
 data class DestinationInput(
     val travelPlanId: Int,
     val startAt: String,
     val endAt: String,
     val vehicle: String,
+    val note: String?,
     val financialTransportation: Double,
     val financialLodging: Double,
     val financialConsumption: Double,
@@ -289,10 +305,21 @@ data class DestinationInput(
     val locationLng: Double
 )
 
-sealed class TravelMethod(val apiValue: String, val displayName: String, val icon: ImageVector) {
-    data object Car : TravelMethod("car", "Mobil", Icons.Filled.DirectionsCar)
-    data object Bus : TravelMethod("bus", "Bus", Icons.Filled.DirectionsBus)
-    data object Train : TravelMethod("train", "Kereta", Icons.Filled.Train)
-    data object Motorcycle : TravelMethod("motorcycle", "Motor", Icons.Filled.TwoWheeler)
-    data object Plane : TravelMethod("plane", "Pesawat", Icons.Filled.Flight)
-}
+data class RecommendationsResponse(
+    val status: Boolean,
+    val statusCode: Int,
+    val message: String,
+    val data: List<Recommendation>
+)
+
+data class Recommendation(
+    val place_id: String,
+    val name: String,
+    val lat: Double,
+    val lng: Double,
+    val rating: Double,
+    val address: String,
+    val phone: String,
+    val website: String?,
+    val opening_hours: List<String>
+)

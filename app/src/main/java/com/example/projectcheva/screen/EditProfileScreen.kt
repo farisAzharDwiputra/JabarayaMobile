@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -57,131 +58,159 @@ import com.example.projectcheva.retrofit.AuthViewModel
 @Composable
 fun EditProfileScreen(
     navController: NavController,
-    viewModel: AuthViewModel
+    viewModel: AuthViewModel,
+    signInMethod: SignInMethod
 ) {
+    // Observe user profile data
     val userProfile by viewModel.userProfile.observeAsState()
     var name by remember { mutableStateOf(userProfile?.name ?: "") }
     var email by remember { mutableStateOf(userProfile?.email ?: "") }
     var phone by remember { mutableStateOf(userProfile?.phone ?: "") }
     var avatarUri by remember { mutableStateOf<Uri?>(null) }
-    var isLoading by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(true) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         avatarUri = uri
     }
 
-    Column(
+    // Fetch user profile data
+    LaunchedEffect(Unit) {
+        viewModel.fetchUserProfile(signInMethod)
+    }
+
+    // Update state when userProfile changes
+    LaunchedEffect(userProfile) {
+        if (userProfile != null) {
+            name = userProfile!!.name ?: ""
+            email = userProfile!!.email ?: ""
+            phone = userProfile!!.phone ?: ""
+            avatarUri = userProfile!!.avatar?.let { Uri.parse(it) }
+            isLoading = false
+        }
+    }
+
+    Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .background(Color.White)
     ) {
-        Text(
-            text = "Edit Profile",
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        userProfile?.let {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .clip(RoundedCornerShape(5.dp))
-                    .background(Color(0xFF68B1FF))
-                    .padding(8.dp)
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box {
-                        Image(
-                            painter = rememberAsyncImagePainter(avatarUri ?: it.avatar),
-                            contentDescription = "User Avatar",
-                            modifier = Modifier
-                                .size(64.dp)
-                                .clip(CircleShape)
-                                .clickable { launcher.launch("image/*") }
-                        )
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit Icon",
-                            tint = Color.White,
-                            modifier = Modifier
-                                .align(Alignment.BottomEnd)
-                                .background(Color(0xFF68B1FF), CircleShape)
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        OutlinedTextField(
-                            value = name,
-                            onValueChange = { name = it },
-                            label = { Text("Name") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        OutlinedTextField(
-                            value = email,
-                            onValueChange = { email = it },
-                            label = { Text("Email") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        OutlinedTextField(
-                            value = phone,
-                            onValueChange = { phone = it },
-                            label = { Text("Phone") },
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                OutlinedButton(
-                    onClick = {
-                        isLoading = true
-                        val request = UpdateUserProfileRequest(name, email, phone, avatarUrl = avatarUri?.toString())
-                        viewModel.updateUserProfile(request) { success ->
-                            isLoading = false
-                            if (success) {
-                                navController.popBackStack()
-                            } else {
-                                // Handle the error (e.g., show a toast or dialog)
-                            }
-                        }
-                    },
-                    border = BorderStroke(1.dp, Color.Black),
-                    modifier = Modifier
-                        .align(Alignment.End)
-                        .fillMaxWidth(0.55f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.White,
-                        contentColor = Color.Black
-                    )
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Filled.Settings,
-                        contentDescription = "Settings"
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = "Save",
-                        fontFamily = FontProvider.urbanist,
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator()
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text("Loading profile...", style = MaterialTheme.typography.bodySmall)
                 }
             }
-        }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Text(
+                    text = "Edit Profile",
+                    style = MaterialTheme.typography.headlineSmall,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
 
-        Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-        if (isLoading) {
-            Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Color(0xFF68B1FF))
+                        .padding(8.dp)
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Box {
+                            Image(
+                                painter = rememberAsyncImagePainter(avatarUri ?: userProfile?.avatar),
+                                contentDescription = "User Avatar",
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .clip(CircleShape)
+                                    .clickable { launcher.launch("image/*") }
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Edit Icon",
+                                tint = Color.White,
+                                modifier = Modifier
+                                    .align(Alignment.BottomEnd)
+                                    .background(Color(0xFF68B1FF), CircleShape)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                            )
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Column {
+                            OutlinedTextField(
+                                value = name,
+                                onValueChange = { name = it },
+                                label = { Text("Name") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = email,
+                                onValueChange = { email = it },
+                                label = { Text("Email") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            OutlinedTextField(
+                                value = phone,
+                                onValueChange = { phone = it },
+                                label = { Text("Phone") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    OutlinedButton(
+                        onClick = {
+                            isLoading = true
+                            val request = UpdateUserProfileRequest(
+                                name = name,
+                                email = email,
+                                phone = phone,
+                                avatarUrl = avatarUri?.toString()
+                            )
+                            viewModel.updateUserProfile(request) { success ->
+                                isLoading = false
+                                if (success) {
+                                    navController.popBackStack()
+                                } else {
+                                    // Handle the error (e.g., show a toast or dialog)
+                                }
+                            }
+                        },
+                        border = BorderStroke(1.dp, Color.Black),
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .fillMaxWidth(0.55f),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.White,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(16.dp),
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings"
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            text = "Save",
+                            fontFamily = FontProvider.urbanist,
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -213,8 +242,10 @@ fun EditProfilePreview(){
             userProfile.value = dummyUserProfile
         }
     }
+    // Define dummy SignInMethod enum or class
+    val signInMethod = SignInMethod.Manual
 
     // Create a dummy NavController for preview
     val navController = rememberNavController()
-    EditProfileScreen(navController = navController, viewModel = viewModel)
+    EditProfileScreen(navController, viewModel, signInMethod)
 }

@@ -22,8 +22,8 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -61,7 +61,7 @@ import kotlinx.coroutines.delay
 fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = viewModel(factory = AuthViewModelFactory(context))
-    val authResult by authViewModel.authResult.collectAsState()
+    val authResult by authViewModel.authResult.observeAsState(Pair(false, null))
 
     // State variables
     var email by remember { mutableStateOf("") }
@@ -89,11 +89,16 @@ fun LoginScreen(navController: NavController, authViewModel: AuthViewModel) {
     }
 
     LaunchedEffect(authResult) {
-        authResult?.let { (success, message) ->
+        authResult.let { (success, message) ->
             if (success) {
                 navigateToDashboard = true
             } else {
-                Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                val toastMessage = message ?: "Welcome to Jabaraya"
+                if (toastMessage.isNotBlank()) {
+                    Toast.makeText(context, toastMessage, Toast.LENGTH_LONG).show()
+                } else {
+                    // Optionally, handle the case where the message is blank
+                }
             }
         }
     }

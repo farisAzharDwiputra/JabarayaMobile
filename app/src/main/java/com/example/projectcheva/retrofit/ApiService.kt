@@ -2,16 +2,17 @@ package com.example.projectcheva.retrofit
 
 import com.example.projectcheva.AuthResponse
 import com.example.projectcheva.ChangePasswordRequest
+import com.example.projectcheva.DestinationListResponse
 import com.example.projectcheva.DestinationResponse
 import com.example.projectcheva.GoogleLoginRequest
 import com.example.projectcheva.LoginRequest
 import com.example.projectcheva.LoginResponse
+import com.example.projectcheva.RecommendationsResponse
 import com.example.projectcheva.RegisterRequest
 import com.example.projectcheva.TokenRequest
 import com.example.projectcheva.TravelPlanInput
 import com.example.projectcheva.TravelPlanListResponse
 import com.example.projectcheva.TravelPlanResponse
-import com.example.projectcheva.UpdateDestinationResponse
 import com.example.projectcheva.UpdateUserProfileRequest
 import com.example.projectcheva.UserProfileResponse
 import retrofit2.Response
@@ -84,53 +85,74 @@ interface ApiService {
         @Header("Authorization") token: String
     ): Response<TravelPlanResponse>
 
-    @GET("api/travelplans/{travelPlanId}/destinations")
-    suspend fun getDestinations(
-        @Path("travelPlanId") travelPlanId: Int
+    @GET("api/travel-plans/{travelPlanId}/destinations/{destinationId}")
+    suspend fun getDestinationById(
+        @Header("Authorization") token: String,
+        @Path("travelPlanId") travelPlanId: Int,
+        @Path("destinationId") destinationId: Int
     ): Response<DestinationResponse>
 
+    @GET("api/travel-plans/{travelPlanId}/destinations")
+    suspend fun getAllDestinations(
+        @Header("Authorization") authHeader: String,
+        @Path("travelPlanId") travelPlanId: Int
+    ): Response<DestinationListResponse>
+
+    @FormUrlEncoded
     @POST("api/travel-plans/{travelPlanId}/destinations")
     suspend fun addDestination(
+        @Header("Authorization") token: String,
         @Path("travelPlanId") travelPlanId: Int,
-        @Part("startAt") startAt: String,
-        @Part("endAt") endAt: String,
-        @Part("vehicle") vehicle: String,
-        @Part("financialTransportation") financialTransportation: Double,
-        @Part("financialLodging") financialLodging: Double,
-        @Part("financialConsumption") financialConsumption: Double,
-        @Part("financialEmergencyFund") financialEmergencyFund: Double,
-        @Part("financialSouvenir") financialSouvenir: Double,
-        @Part("locationName") locationName: String,
-        @Part("locationPlaceId") locationPlaceId: String,
-        @Part("locationAddress") locationAddress: String,
-        @Part("locationLat") locationLat: Double,
-        @Part("locationLng") locationLng: Double
+        @Field("startAt") startAt: String,
+        @Field("endAt") endAt: String,
+        @Field("vehicle") vehicle: String,
+        @Field("note") note: String?,
+        @Field("financialTransportation") financialTransportation: Double,
+        @Field("financialLodging") financialLodging: Double,
+        @Field("financialConsumption") financialConsumption: Double,
+        @Field("financialEmergencyFund") financialEmergencyFund: Double,
+        @Field("financialSouvenir") financialSouvenir: Double,
+        @Field("locationName") locationName: String,
+        @Field("locationPlaceId") locationPlaceId: String,
+        @Field("locationAddress") locationAddress: String,
+        @Field("locationLat") locationLat: Double,
+        @Field("locationLng") locationLng: Double
     ): Response<DestinationResponse>
 
+    @FormUrlEncoded
     @POST("api/travel-plans/{travelPlanId}/destinations/{destinationId}")
-    @Headers("X-HTTP-Method-Override: PUT")
     suspend fun updateDestination(
+        @Header("Authorization") token: String,
         @Path("travelPlanId") travelPlanId: Int,
         @Path("destinationId") destinationId: Int,
-        @Part("startAt") startAt: String,
-        @Part("endAt") endAt: String,
-        @Part("vehicle") vehicle: String,
-        @Part("financialTransportation") financialTransportation: Double,
-        @Part("financialLodging") financialLodging: Double,
-        @Part("financialConsumption") financialConsumption: Double,
-        @Part("financialEmergencyFund") financialEmergencyFund: Double,
-        @Part("financialSouvenir") financialSouvenir: Double,
-        @Part("locationName") locationName: String,
-        @Part("locationPlaceId") locationPlaceId: String,
-        @Part("locationAddress") locationAddress: String,
-        @Part("locationLat") locationLat: Double,
-        @Part("locationLng") locationLng: Double
-    ): Response<UpdateDestinationResponse>
+        @Field("startAt") startAt: String,
+        @Field("endAt") endAt: String,
+        @Field("vehicle") vehicle: String,
+        @Field("note") note: String?,
+        @Field("financialTransportation") financialTransportation: Double,
+        @Field("financialLodging") financialLodging: Double,
+        @Field("financialConsumption") financialConsumption: Double,
+        @Field("financialEmergencyFund") financialEmergencyFund: Double,
+        @Field("financialSouvenir") financialSouvenir: Double,
+        @Field("locationName") locationName: String,
+        @Field("locationPlaceId") locationPlaceId: String,
+        @Field("locationAddress") locationAddress: String,
+        @Field("locationLat") locationLat: Double,
+        @Field("locationLng") locationLng: Double
+    ): Response<DestinationResponse>
 
     @DELETE("api/travel-plans/{travelPlanId}/destinations/{destinationId}")
     suspend fun deleteDestination(
+        @Header("Authorization") token: String,
         @Path("travelPlanId") travelPlanId: Int,
         @Path("destinationId") destinationId: Int
-    ): Response<Unit>
+    ): Response<DestinationResponse>
+
+    @GET("api/proxy/recomendation-places")
+    suspend fun getRecommendations(
+        @Header("Authorization") token: String,
+        @Query("locationLat") locationLat: String,
+        @Query("locationLng") locationLng: String
+    ): Response<RecommendationsResponse>
 
 }
